@@ -286,8 +286,8 @@ static aiori_fd_t *HDF5_Open(char *testFileName, int flags, aiori_mod_opt_t * pa
                 ShowHints(&mpiHints);
                 fprintf(stdout, "}\n");
         }
-        HDF5_CHECK(H5Pset_fapl_mpio(accessPropList, comm, mpiHints),
-                   "cannot set file access property list");
+        /* HDF5_CHECK(H5Pset_fapl_mpio(accessPropList, comm, mpiHints), */
+        /*            "cannot set file access property list"); */
 
         /* set alignment */
         HDF5_CHECK(H5Pset_alignment(accessPropList, o->setAlignment, o->setAlignment),
@@ -322,35 +322,35 @@ static aiori_fd_t *HDF5_Open(char *testFileName, int flags, aiori_mod_opt_t * pa
                         WARN("showHints not working for HDF5");
                 }
         } else {
-                MPI_Info mpiHintsCheck = MPI_INFO_NULL;
-                hid_t apl;
-                apl = H5Fget_access_plist(*fd);
-                HDF5_CHECK(H5Pget_fapl_mpio(apl, &comm, &mpiHintsCheck),
-                           "cannot get info object through HDF5");
-                if (rank == 0) {
-                        fprintf(stdout,
-                                "\nhints returned from opened file (HDF5) {\n");
-                        ShowHints(&mpiHintsCheck);
-                        fprintf(stdout, "}\n");
-                        if (1 == 1) {   /* request the MPIIO file handle and its hints */
-                                MPI_File *fd_mpiio;
-                                HDF5_CHECK(H5Fget_vfd_handle
-                                           (*fd, apl, (void **)&fd_mpiio),
-                                           "cannot get MPIIO file handle");
-                                if (mpiHintsCheck != MPI_INFO_NULL)
-                                        MPI_Info_free(&mpiHintsCheck);
-                                MPI_CHECK(MPI_File_get_info
-                                          (*fd_mpiio, &mpiHintsCheck),
-                                          "cannot get info object through MPIIO");
-                                fprintf(stdout,
-                                        "\nhints returned from opened file (MPIIO) {\n");
-                                ShowHints(&mpiHintsCheck);
-                                fprintf(stdout, "}\n");
-                                if (mpiHintsCheck != MPI_INFO_NULL)
-                                        MPI_Info_free(&mpiHintsCheck);
-                        }
-                }
-                MPI_CHECK(MPI_Barrier(testComm), "barrier error");
+                /* MPI_Info mpiHintsCheck = MPI_INFO_NULL; */
+                /* hid_t apl; */
+                /* apl = H5Fget_access_plist(*fd); */
+                /* HDF5_CHECK(H5Pget_fapl_mpio(apl, &comm, &mpiHintsCheck), */
+                /*            "cannot get info object through HDF5"); */
+                /* if (rank == 0) { */
+                /*         fprintf(stdout, */
+                /*                 "\nhints returned from opened file (HDF5) {\n"); */
+                /*         ShowHints(&mpiHintsCheck); */
+                /*         fprintf(stdout, "}\n"); */
+                /*         if (1 == 1) {   /\* request the MPIIO file handle and its hints *\/ */
+                /*                 MPI_File *fd_mpiio; */
+                /*                 HDF5_CHECK(H5Fget_vfd_handle */
+                /*                            (*fd, apl, (void **)&fd_mpiio), */
+                /*                            "cannot get MPIIO file handle"); */
+                /*                 if (mpiHintsCheck != MPI_INFO_NULL) */
+                /*                         MPI_Info_free(&mpiHintsCheck); */
+                /*                 MPI_CHECK(MPI_File_get_info */
+                /*                           (*fd_mpiio, &mpiHintsCheck), */
+                /*                           "cannot get info object through MPIIO"); */
+                /*                 fprintf(stdout, */
+                /*                         "\nhints returned from opened file (MPIIO) {\n"); */
+                /*                 ShowHints(&mpiHintsCheck); */
+                /*                 fprintf(stdout, "}\n"); */
+                /*                 if (mpiHintsCheck != MPI_INFO_NULL) */
+                /*                         MPI_Info_free(&mpiHintsCheck); */
+                /*         } */
+                /* } */
+                /* MPI_CHECK(MPI_Barrier(testComm), "barrier error"); */
         }
 
         /* this is necessary for resetting various parameters
@@ -367,14 +367,14 @@ static aiori_fd_t *HDF5_Open(char *testFileName, int flags, aiori_mod_opt_t * pa
         HDF5_CHECK(xferPropList, "cannot create transfer property list");
 
         /* set data transfer mode */
-        if (hints->collective) {
-                HDF5_CHECK(H5Pset_dxpl_mpio(xferPropList, H5FD_MPIO_COLLECTIVE),
-                           "cannot set collective data transfer mode");
-        } else {
-                HDF5_CHECK(H5Pset_dxpl_mpio
-                           (xferPropList, H5FD_MPIO_INDEPENDENT),
-                           "cannot set independent data transfer mode");
-        }
+        /* if (hints->collective) { */
+        /*         HDF5_CHECK(H5Pset_dxpl_mpio(xferPropList, H5FD_MPIO_COLLECTIVE), */
+        /*                    "cannot set collective data transfer mode"); */
+        /* } else { */
+        /*         HDF5_CHECK(H5Pset_dxpl_mpio */
+        /*                    (xferPropList, H5FD_MPIO_INDEPENDENT), */
+        /*                    "cannot set independent data transfer mode"); */
+        /* } */
 
         /* set up memory data space for transfer */
         memStart[0] = (hsize_t) 0;

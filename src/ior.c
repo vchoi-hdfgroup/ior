@@ -1267,7 +1267,7 @@ static void TestIoSys(IOR_test_t *test)
                                 MPI_CHECK(MPI_Barrier(testComm),
                                           "barrier error");
                         timer[4] = GetTimeStamp();
-                        backend->close(fd, params->backend_options);
+                        /* backend->close(fd, params->backend_options); */
 
                         timer[5] = GetTimeStamp();
                         MPI_CHECK(MPI_Barrier(testComm), "barrier error");
