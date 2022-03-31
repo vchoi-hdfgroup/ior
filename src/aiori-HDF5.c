@@ -220,6 +220,10 @@ static aiori_fd_t *HDF5_Open(char *testFileName, int flags, aiori_mod_opt_t * pa
         hid_t *fd;
         MPI_Comm comm;
         MPI_Info mpiHints = MPI_INFO_NULL;
+    
+H5F_fspace_strategy_t strategy;
+hsize_t               fsp_size;
+hid_t file_fcpl;
 
         fd = (hid_t *) malloc(sizeof(hid_t));
         if (fd == NULL)
@@ -258,6 +262,10 @@ static aiori_fd_t *HDF5_Open(char *testFileName, int flags, aiori_mod_opt_t * pa
         HDF5_CHECK(H5Pset_sizes
                    (createPropList, sizeof(hsize_t), sizeof(hsize_t)),
                    "cannot set property list properly");
+    
+        HDF5_CHECK(H5Pset_file_space_strategy
+                   (createPropList, H5F_FSPACE_STRATEGY_PAGE, FALSE, (hsize_t)1),
+                   "cannot set file spce strategy properly");
 
         /* set up file access property list */
         accessPropList = H5Pcreate(H5P_FILE_ACCESS);
@@ -315,6 +323,10 @@ static aiori_fd_t *HDF5_Open(char *testFileName, int flags, aiori_mod_opt_t * pa
                   HDF5_CHECK(*fd, "cannot open file");
           }
         }
+file_fcpl = H5Fget_create_plist(*fd);
+H5Pget_file_space_strategy(file_fcpl, &strategy, NULL, NULL);
+H5Pget_file_space_page_size(file_fcpl, &fsp_size);
+printf("strategy=%u, fsp_size=%u\n", strategy, fsp_size);
 
         /* show hints actually attached to file handle */
         if (o->showHints || (1) /* WEL - this needs fixing */ ) {
